@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CompileKotlinOperationTest {
+class CompileKawaOperationTest {
     @BeforeAll
     static void beforeAll() {
         var level = Level.ALL;
@@ -48,7 +48,7 @@ class CompileKotlinOperationTest {
 
     @Test
     void testExecute() throws IOException {
-        var tmpDir = Files.createTempDirectory("bld-kotlin").toFile();
+        var tmpDir = Files.createTempDirectory("bld-kawa").toFile();
 
         try {
             var buildDir = new File(tmpDir, "build");
@@ -58,45 +58,22 @@ class CompileKotlinOperationTest {
             assertThat(mainDir.mkdirs()).isTrue();
             assertThat(testDir.mkdirs()).isTrue();
 
-            var compileJars = new ArrayList<String>();
-            for (var f : Objects.requireNonNull(new File("examples/lib/compile").listFiles())) {
-                compileJars.add(f.getAbsolutePath());
-            }
-
-            var testJars = new ArrayList<String>();
-            for (var f : Objects.requireNonNull(new File("examples/lib/test").listFiles())) {
-                testJars.add(f.getAbsolutePath());
-            }
-
-            var op = new CompileKotlinOperation()
-                    .fromProject(new BaseProjectBlueprint(new File("examples"), "com.example",
-                            "Example"))
+            var op = new CompileKawaOperation()
+                    .fromProject(new BaseProjectBlueprint(new File("examples"), "edu.example", "app"))
                     .buildMainDirectory(mainDir)
-                    .buildTestDirectory(testDir)
-                    .compileMainClasspath(compileJars)
-                    .compileTestClasspath(testJars)
-                    .compileTestClasspath(compileJars)
-                    .compileTestClasspath(mainDir.getAbsolutePath());
-
-            op.compileOptions().verbose(true);
-            op.compileOptions().jdkRelease("17");
-
-            var args = op.compileOptions().args();
-            var matches = List.of("-Xjdk-release=17", "-no-stdlib", "-verbose");
-            assertThat(args).isEqualTo(matches);
+                    .buildTestDirectory(testDir);
 
             op.execute();
 
             assertThat(tmpDir).isNotEmptyDirectory();
             assertThat(mainDir).isNotEmptyDirectory();
-            assertThat(testDir).isNotEmptyDirectory();
+            assertThat(testDir).isEmptyDirectory();
 
-            var mainOut = Path.of(mainDir.getAbsolutePath(), "com", "example").toFile();
-            assertThat(new File(mainOut, "Example.class")).exists();
-            assertThat(new File(mainOut, "Example$Companion.class")).exists();
+            var mainOut = Path.of(mainDir.getAbsolutePath(), "edu", "example").toFile();
+            assertThat(new File(mainOut, "App.class")).exists();
 
-            var testOut = Path.of(testDir.getAbsolutePath(), "com", "example").toFile();
-            assertThat(new File(testOut, "ExampleTest.class")).exists();
+            // var testOut = Path.of(testDir.getAbsolutePath(), "edu", "example").toFile();
+            // assertThat(new File(testOut, "ExampleTest.class")).exists();
         } finally {
             FileUtils.deleteDirectory(tmpDir);
         }

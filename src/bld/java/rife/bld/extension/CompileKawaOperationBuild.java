@@ -29,54 +29,37 @@ import static rife.bld.dependencies.Scope.compile;
 import static rife.bld.dependencies.Scope.test;
 import static rife.bld.operations.JavadocOptions.DocLinkOption.NO_MISSING;
 
-public class CompileKotlinOperationBuild extends Project {
-    public CompileKotlinOperationBuild() {
+public class CompileKawaOperationBuild extends Project {
+    public CompileKawaOperationBuild() {
         pkg = "rife.bld.extension";
-        name = "bld-kotlin";
-        version = version(0, 9, 3);
+        name = "bld-kawa";
+        version = version(0, 0, 1);
 
         javaRelease = 17;
         downloadSources = true;
         autoDownloadPurge = true;
         repositories = List.of(MAVEN_LOCAL, MAVEN_CENTRAL, RIFE2_RELEASES);
 
-        var dokka = version(1, 9, 20);
-        var kotlin = version(1, 9, 23);
         scope(compile)
-                .include(dependency("org.jetbrains.kotlin", "kotlin-compiler", kotlin))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-annotation-processing", kotlin))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-scripting-compiler", kotlin))
-                .include(dependency("org.jetbrains.dokka", "dokka-cli", dokka))
-                .include(dependency("org.jetbrains.dokka", "dokka-base", dokka))
-                .include(dependency("org.jetbrains.dokka", "analysis-kotlin-descriptors", dokka))
-                .include(dependency("org.jetbrains.dokka", "javadoc-plugin", dokka))
-                .include(dependency("org.jetbrains.dokka", "gfm-plugin", dokka))
-                .include(dependency("org.jetbrains.dokka", "jekyll-plugin", dokka))
-                .include(dependency("com.uwyn.rife2", "bld", version(1, 9, 0)));
+                .include(dependency("com.uwyn.rife2", "bld", version(1, 9, 0)))
+                .include(dependency("com.github.arvyy", "kawa", version(3, 1, 1)));
         scope(test)
                 .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 2)))
                 .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 2)))
                 .include(dependency("org.assertj", "assertj-core", version(3, 25, 3)));
 
-        javadocOperation()
-                .javadocOptions()
-                .author()
-                .docLint(NO_MISSING)
-                .link("https://rife2.github.io/bld/");
-
         publishOperation()
                 .repository(version.isSnapshot() ? repository("rife2-snapshot") : repository("rife2"))
                 .info()
                 .groupId("com.uwyn.rife2")
-                .artifactId("bld-kotlin")
-                .description("bld Kotlin Extension")
-                .url("https://github.com/rife2/bld-kotlin")
+                .artifactId("bld-kawa")
+                .description("bld Kawa Extension")
+                .url("https://github.com/rife2/bld-kawa")
                 .developer(
                         new PublishDeveloper()
-                                .id("ethauvin")
-                                .name("Erik C. Thauvin")
-                                .email("erik@thauvin.net")
-                                .url("https://erik.thauvin.net/")
+                                .id("tribals")
+                                .name("Anthony S.")
+                                .email("w732qq@gmail.com")
                 )
                 .license(
                         new PublishLicense()
@@ -85,24 +68,15 @@ public class CompileKotlinOperationBuild extends Project {
                 )
                 .scm(
                         new PublishScm()
-                                .connection("scm:git:https://github.com/rife2/bld-kotlin.git")
-                                .developerConnection("scm:git:git@github.com:rife2/bld-kotlin.git")
-                                .url("https://github.com/rife2/bld-kotlin")
+                                .connection("scm:git:https://github.com/rife2/bld-kawa.git")
+                                .developerConnection("scm:git:git@github.com:rife2/bld-kawa.git")
+                                .url("https://github.com/rife2/bld-kawa")
                 )
                 .signKey(property("sign.key"))
                 .signPassphrase(property("sign.passphrase"));
     }
 
     public static void main(String[] args) {
-        new CompileKotlinOperationBuild().start(args);
-    }
-
-    @BuildCommand(summary = "Runs PMD analysis")
-    public void pmd() {
-        new PmdOperation()
-                .fromProject(this)
-                .failOnViolation(true)
-                .ruleSets("config/pmd.xml")
-                .execute();
+        new CompileKawaOperationBuild().start(args);
     }
 }

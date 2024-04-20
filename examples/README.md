@@ -1,5 +1,5 @@
 
-## Compile the Kotlin Example
+## Compile the Kawa Example
 
 ```console
 ./bld compile
@@ -11,17 +11,8 @@
 ./bld run
 ```
 
-## Run the Tests
+<!-- ## Run the Tests
 
 ```console
 ./bld test
-```
-
-## Build the documentation with [Dokka](https://github.com/Kotlin/dokka)
-
-```console
-./bld javadoc
-./bld dokka-html
-./bld dokka-gfm
-./bld dokka-jekyll
-```
+``` -->
