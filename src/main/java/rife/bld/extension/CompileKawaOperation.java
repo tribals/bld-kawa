@@ -225,10 +225,11 @@ public class CompileKawaOperation extends AbstractOperation<CompileKawaOperation
      */
     public CompileKawaOperation fromProject(BaseProject project) {
         project_ = project;
-        return buildMainDirectory(project.buildMainDirectory())
+        var op = buildMainDirectory(project.buildMainDirectory())
                 .buildTestDirectory(project.buildTestDirectory())
                 .mainSourceFiles(getKawaFileList(new File(project.srcMainDirectory(), "kawa")))
                 .testSourceFiles(getKawaFileList(new File(project.srcTestDirectory(), "kawa")));
+        return op;
     }
 
     /**

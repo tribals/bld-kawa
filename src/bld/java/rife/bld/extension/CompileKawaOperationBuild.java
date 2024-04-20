@@ -33,7 +33,7 @@ public class CompileKawaOperationBuild extends Project {
     public CompileKawaOperationBuild() {
         pkg = "rife.bld.extension";
         name = "bld-kawa";
-        version = version(0, 0, 1);
+        version = version(0, 0, 3);
 
         javaRelease = 17;
         downloadSources = true;
